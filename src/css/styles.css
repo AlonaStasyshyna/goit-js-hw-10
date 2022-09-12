@@ -18,3 +18,56 @@ body {
   max-width: 320px;
   margin-bottom: 16px;
 }
+
+/* Other styles */
+p,
+h1 {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+
+  list-style-type: none;
+}
+
+.country-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.country-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.country-name {
+  font-size: 18px;
+}
+
+.country-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.country {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.country .country-name {
+  font-size: 28px;
+}
+
+.country-capital {
+  font-size: 18px;
+}
+
+.country-capital-bold {
+  font-weight: 700;
+}

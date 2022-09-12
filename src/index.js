@@ -1,10 +1,9 @@
 import './css/styles.css';
 import debounce from 'lodash.debounce';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { fetchCountries } from './js/fetchCountries';
 
 const DEBOUNCE_DELAY = 300;
-const BASE_URL = 'https://restcountries.com/v3.1/name/';
-const QUERY_FILTRES = 'fields=name,capital,population,flags,languages';
 
 const searchInput = document.querySelector('#search-box');
 const countryList = document.querySelector('.country-list');
@@ -14,21 +13,14 @@ searchInput.addEventListener('input', debounce(onSearchInput, DEBOUNCE_DELAY));
 
 function onSearchInput(e) {
   const searchName = e.target.value.trim();
+  countryList.innerHTML = '';
+  countryCard.innerHTML = '';
 
   if (!searchName) {
     return;
   }
 
   fetchCountries(searchName).then(showResultOfSearch).catch(showErrorOfSearch);
-}
-
-function fetchCountries(name) {
-  return fetch(`${BASE_URL}${name}?${QUERY_FILTRES}`).then(resp => {
-    if (!resp.ok) {
-      throw new Error();
-    }
-    return resp.json();
-  });
 }
 
 function createCountryItems(items) {
@@ -40,6 +32,8 @@ function createCountryItems(items) {
                 class="country-flag"
                 src="${imgFlag}" 
                 alt="Flag of ${officialName}" 
+                width="30"
+                height="20"
             />
             <h1 class="country-name">${officialName}</h1>
         </li>
@@ -64,12 +58,16 @@ function createCountryCard(item) {
                 class="country-flag"
                 src="${imgFlag}"
                 alt="Flag of ${officialName}" 
+                width = "30"
+                height="20"
             />
             <h1 class="country-name">${officialName}</h1>
         </div>
-        <p class="country-capital">Capital: ${capital}</p>
-        <p class="country-population">Population: ${population}</p>
-        <p class="country-languages">Languages: ${languages}</p>
+        <p class="country-capital"><span class="country-capital-bold">Capital:</span> ${capital}</p>
+        <p class="country-population"><span class="country-capital-bold">Population:</span> ${population}</p>
+        <p class="country-languages"><span class="country-capital-bold">Languages:</span> ${Object.values(
+          languages
+        )}</p>
         `;
       }
     )
@@ -84,10 +82,13 @@ function showResultOfSearch(resp) {
   }
 
   if (resp.length > 1) {
-    return (countryList.innerHTML = createCountryItems(resp));
+    return countryList.insertAdjacentHTML(
+      'afterbegin',
+      createCountryItems(resp)
+    );
   }
 
-  return (countryCard.innerHTML = createCountryCard(resp));
+  return countryCard.insertAdjacentHTML('afterbegin', createCountryCard(resp));
 }
 
 function showErrorOfSearch() {
